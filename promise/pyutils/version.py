@@ -23,6 +23,8 @@ def get_version(version=None):
             sub = '.dev%s' % git_changeset
         else:
             sub = '.dev'
+    elif version[3].startswith('monetate'):
+        sub = '.' + version[3]
     elif version[3] != 'final':
         mapping = {'alpha': 'a', 'beta': 'b', 'rc': 'rc'}
         sub = mapping[version[3]] + str(version[4])
@@ -33,7 +35,9 @@ def get_version(version=None):
 def get_main_version(version=None):
     "Returns main version (X.Y[.Z]) from VERSION."
     version = get_complete_version(version)
-    parts = 2 if version[2] == 0 else 3
+    # YUCK YUCK YUCK : Do not strip the last zero!
+    #parts = 2 if version[2] == 0 else 3
+    parts = 3
     return '.'.join(str(x) for x in version[:parts])
 
 
@@ -46,7 +50,6 @@ def get_complete_version(version=None):
         return VERSION
     else:
         assert len(version) == 5
-        assert version[3] in ('alpha', 'beta', 'rc', 'final')
 
     return version
 
